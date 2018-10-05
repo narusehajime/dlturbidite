@@ -1,22 +1,22 @@
-import numpy as np
-import os
-import ipdb
-
-
-def connect_dataset(dist_start, dist_end, file_list, outputdir,
+import numpy as np
+import os
+import ipdb
+
+
+def connect_dataset(dist_start, dist_end, file_list, outputdir,
                     topodx=5, offset=5000, gclass_num=4, test_data_num=100):
     """
-    •¡”‚Ìƒf[ƒ^ƒZƒbƒg‚ğ˜AŒ‹‚·‚é
+    è¤‡æ•°ã®ãƒ‡ãƒ¼ã‚¿ã‚»ãƒƒãƒˆã‚’é€£çµã™ã‚‹
     """
     # ipdb.set_trace()
 
-    # ŠwK—Ìˆæ‚Ìn“_‚ÆI“_‚ğŒˆ‚ß‚ÄCƒOƒŠƒbƒh”Ô†‚É•ÏŠ·‚·‚é
+    # å­¦ç¿’é ˜åŸŸã®å§‹ç‚¹ã¨çµ‚ç‚¹ã‚’æ±ºã‚ã¦ï¼Œã‚°ãƒªãƒƒãƒ‰ç•ªå·ã«å¤‰æ›ã™ã‚‹
     prox = np.round((dist_start+offset)/topodx).astype(np.int32)
     dist = np.round((dist_end+offset)/topodx).astype(np.int32)
     H = np.zeros([0, (dist-prox) * (gclass_num)])
     icond = np.zeros([0, gclass_num + 3])
 
-    # ƒtƒ@ƒCƒ‹‚Ì“Ç‚İ‚İ‚ÆŒ‹‡
+    # ãƒ•ã‚¡ã‚¤ãƒ«ã®èª­ã¿è¾¼ã¿ã¨çµåˆ
     for i in range(len(file_list)):
         H_temp = np.loadtxt(
             file_list[i] + '/H1.txt', delimiter=',')[:, prox:dist]
@@ -31,19 +31,19 @@ def connect_dataset(dist_start, dist_end, file_list, outputdir,
         H = np.concatenate((H, H_temp), axis=0)
         icond = np.concatenate((icond, icond_temp), axis=0)
 
-    # ƒf[ƒ^‚ÌÅ‘å’l‚ÆÅ¬’l‚ğæ“¾‚·‚é
+    # ãƒ‡ãƒ¼ã‚¿ã®æœ€å¤§å€¤ã¨æœ€å°å€¤ã‚’å–å¾—ã™ã‚‹
     max_x = np.max(H)
     min_x = np.min(H)
     icond_max = np.max(icond, axis=0)
     icond_min = np.min(icond, axis=0)
 
-    # ƒf[ƒ^‚ğƒeƒXƒg‚ÆƒgƒŒ[ƒjƒ“ƒO‚É•ªŠ„‚·‚é
+    # ãƒ‡ãƒ¼ã‚¿ã‚’ãƒ†ã‚¹ãƒˆã¨ãƒˆãƒ¬ãƒ¼ãƒ‹ãƒ³ã‚°ã«åˆ†å‰²ã™ã‚‹
     H_train = H[0:-test_data_num, :]
     H_test = H[H.shape[0] - test_data_num:, :]
     icond_train = icond[0:-test_data_num, :]
     icond_test = icond[H.shape[0] - test_data_num:, :]
 
-    # ƒf[ƒ^‚ğ•Û‘¶‚·‚é
+    # ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã™ã‚‹
     if not os.path.exists(outputdir):
         os.mkdir(outputdir)
     np.savetxt(outputdir + '/H_train.txt', H_train, delimiter=',')
@@ -58,8 +58,8 @@ def connect_dataset(dist_start, dist_end, file_list, outputdir,
 if __name__ == "__main__":
     dist_start = 0
     dist_end = 900
-    original_data_dir = "Y:/naruse/TC_training_data_G4"
-    parent_dir = "Z:/Documents/PythonScripts/DeepLearningTurbidite/20181005/G4"
+    original_data_dir = "/mnt/public/naruse/TC_training_data_G5"
+    parent_dir = "/home/hajime/data/dlturbidite_data/20181005/G5"
     if not os.path.exists(parent_dir):
         os.mkdir(parent_dir)
     outputdir = parent_dir + "/data"
@@ -67,6 +67,6 @@ if __name__ == "__main__":
     # for i in range(1,17):
     #     file_list.append(original_data_dir + "/TCModel_for_ML{0:02d}/output".format(i))
     # del file_list[2]
-    file_list = [original_data_dir + "/TCModel_for_ML_G4/output"]
+    file_list = [original_data_dir + "/TCModel_for_ML_G5/output"]
     connect_dataset(dist_start, dist_end, file_list, outputdir,
-                    offset=50, gclass_num=4, test_data_num=200)
+                    offset=50, gclass_num=5, test_data_num=200)

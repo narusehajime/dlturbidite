@@ -185,8 +185,8 @@ def get_raw_data(x_norm, min_val, max_val):
 if __name__ == "__main__":
     
     #データの読み込み  
-    datadir = '/home/hajime/data/dlturbidite_data/20181005/G1/data/'
-    resdir = '/home/hajime/data/dlturbidite_data/20181005/G1/result/'
+    datadir = '/home/hajime/data/dlturbidite_data/20181206/G1/data/'
+    resdir = '/home/hajime/data/dlturbidite_data/20181206/G1/result/'
     if not os.path.exists(resdir):
         os.mkdir(resdir)
     
@@ -194,14 +194,14 @@ if __name__ == "__main__":
     
     
     #学習の実行
-    testcases = [4000]
+    testcases = [1000]
     for i in range(len(testcases)):
         resdir_case = resdir + '{}/'.format(testcases[i])        
         if not os.path.exists(resdir_case):
             os.mkdir(resdir_case)
         x_train_sub = x_train[0:testcases[i],:]
         y_train_sub = y_train[0:testcases[i],:]
-        model, history = deep_learning_turbidite(resdir_case, x_train_sub, y_train_sub, x_test, y_test, num_layers=5, _epochs=1000)
+        model, history = deep_learning_turbidite(resdir_case, x_train_sub, y_train_sub, x_test, y_test, num_layers=5, _epochs=2000)
         #結果の検証と保存
         result = test_model(model, x_test)
         save_result(resdir_case,model,history,result)
